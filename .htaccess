@@ -1,0 +1,59 @@
+# Sri Kalyani Dhamma School — Prefect Guild Merit Register
+# Military-Grade Apache Security & Threat Shield Configuration
+
+# 1. Set default directory index
+DirectoryIndex index.php index.html
+
+# 1.1 Rewrite .html requests to .php & Smart HTTPS Redirect
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(index|leaderboard|awards|register|profile|topboard|prefects)\.html$ $1.php [NC,L]
+
+    # 1.2 Force HTTPS on production live domains (Bypassed safely for localhost / 127.0.0.1)
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# 2. Prevent directory listing
+Options -Indexes
+
+# 3. Block direct web access to sensitive config, schema, git, env, and source files
+<FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op]|md|yml|yaml)|~)$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(db_config\.php|schema\.sql|\.env|\.git|composer\.(json|lock)|package\.json|README\.md)">
+    Require all denied
+</FilesMatch>
+
+# 4. Suppress Server & PHP Signature Exposure
+<IfModule mod_php7.c>
+    php_flag expose_php off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag expose_php off
+</IfModule>
+
+# 5. Military Fortress HTTP Security Headers
+<IfModule mod_headers.c>
+    # Prevent MIME Sniffing attacks
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Clickjacking Protection: Disallow embedding in iframes across foreign origins
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'self';"
+    
+    # Cross-Site Scripting Filter
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Strict Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Permissions Policy (Disable dangerous hardware sensors by default)
+    Header always set Permissions-Policy "microphone=(), geolocation=(), payment=(), usb=()"
+    
+    # HTTP Strict Transport Security (HSTS) - Enabled when HTTPS is active
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
+</IfModule>

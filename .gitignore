@@ -1,0 +1,13 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Editor & IDE Directories
+.vscode/
+.idea/
+
+# Logs & Temporary Files
+*.log
+*.tmp
+prefect_ratelimit/

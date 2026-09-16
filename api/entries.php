@@ -89,4 +89,8 @@ try {
     fail('Database error saving entry. Please verify inputs.', 500);
 }
 
-respond(['id' => $id]);
+respond([
+    'ok' => true,
+    'id' => $id,
+    'message' => 'Entry saved successfully.'
+]);

@@ -27,4 +27,10 @@ try {
     fail('Database error creating cycle.', 500);
 }
 
-respond(['id' => $id, 'label' => $label, 'start' => $start, 'end' => $end]);
+respond([
+    'ok' => true,
+    'id' => $id,
+    'label' => $label,
+    'start' => $start,
+    'end' => $end
+]);

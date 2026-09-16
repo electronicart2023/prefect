@@ -432,7 +432,7 @@ document.getElementById('dutySubmitBtn').addEventListener('click', async functio
   var vals = {};
   DUTY_FIELDS.forEach(function(f){ vals[f.key] = parseInt(document.getElementById('df_'+f.key).value||'0', 10); });
   var r = await apiCall('entries.php', {type:'duty', prefectId:pid, date:date, note:note, values:vals, passcode:tbPasscode});
-  if(r.ok){
+  if((r.ok || r.id) && !r.error){
     toast('Sunday duty entry saved.');
     document.getElementById('dutyNote').value = '';
     await initCommon();
@@ -451,7 +451,7 @@ document.getElementById('eventSubmitBtn').addEventListener('click', async functi
   var vals = {};
   EVENT_FIELDS.forEach(function(f){ vals[f.key] = parseInt(document.getElementById('ef_'+f.key).value||'0', 10); });
   var r = await apiCall('entries.php', {type:'event', prefectId:pid, date:date, eventName:evName, values:vals, passcode:tbPasscode});
-  if(r.ok){
+  if((r.ok || r.id) && !r.error){
     toast('Event entry saved.');
     document.getElementById('eventName').value = '';
     await initCommon();
@@ -470,7 +470,7 @@ document.getElementById('dedSubmitBtn').addEventListener('click', async function
   var dt = DEDUCTION_TYPES.find(function(x){ return x.key===type; });
   var pts = (dt && dt.points !== null) ? dt.points : parseInt(document.getElementById('dedPoints').value||'-5', 10);
   var r = await apiCall('deductions.php', {prefectId:pid, type:type, date:date, points:pts, note:note, passcode:tbPasscode});
-  if(r.ok){
+  if((r.ok || r.id) && !r.error){
     toast('Deduction recorded.');
     document.getElementById('dedNote').value = '';
     await initCommon();

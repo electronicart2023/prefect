@@ -85,4 +85,8 @@ try {
     fail('Database error saving deduction. Please check values and try again.', 500);
 }
 
-respond(['id' => $id]);
+respond([
+    'ok' => true,
+    'id' => $id,
+    'message' => 'Deduction recorded successfully.'
+]);

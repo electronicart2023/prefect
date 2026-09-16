@@ -4,6 +4,18 @@ All notable changes to the Sri Kalyani Dhamma School — Prefect Guild Merit Reg
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.6.3] - 2026-09-16
+
+### Score Entries & Deductions API Response Contract Synchronization
+
+#### 1. Duty & Event Entries Response Contract (`api/entries.php`, `topboard.php`, `topboard.html`)
+- **Why**: `api/entries.php` returned `{ id: $id }` without an explicit `'ok' => true` property. When a Head Prefect or Top Board user submitted Sunday Duty scores or Special Event scores, the database correctly recorded the points, but the frontend checked `if (r.ok)`, which evaluated to falsy and displayed a false-alarm error toast (`Could not save entry.`).
+- **What**: Added `'ok' => true` and confirmation message to `api/entries.php`, and updated `topboard.php` and `topboard.html` to validate `(r.ok || r.id) && !r.error`.
+
+#### 2. Deductions & Cycles Response Contracts (`api/deductions.php`, `api/cycles.php`)
+- **Why**: `api/deductions.php` and `api/cycles.php` returned `{ id: $id }` without `'ok' => true`.
+- **What**: Synchronized response payloads to include `'ok' => true`, preventing false-alarm error toasts on disciplinary point deductions and cycle creation.
+
 ## [2.6.2] - 2026-09-15
 
 ### Registration API Response Contract & Loopback Rate-Limit Calibration
